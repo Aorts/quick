@@ -12,7 +12,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/jeffotoni/quick/internal/uuid"
+	"github.com/jeffotoni/quick/pkg/uuid"
 )
 
 const (
@@ -72,8 +72,8 @@ func New(config ...Config) func(http.Handler) http.Handler {
 				uuid := generateDefaultUUID(cfd)
 				r.Header.Set(cfd.Name, uuid)
 				w.Header().Set(cfd.Name, uuid)
-				next.ServeHTTP(w, r)
 			}
+			next.ServeHTTP(w, r)
 		})
 	}
 }

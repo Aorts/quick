@@ -20,6 +20,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os/signal"
+	"path"
 	"regexp"
 	"runtime"
 	"runtime/debug"
@@ -1356,7 +1357,7 @@ func (q *Quick) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	defer releaseCtx(ctx)     // Returns it to the pool
 
 	for i := range q.routes {
-		var requestURI = req.URL.Path
+		var requestURI = path.Clean(req.URL.Path)
 		var patternUri = q.routes[i].Pattern
 
 		if q.routes[i].Method != req.Method {
@@ -1367,7 +1368,7 @@ func (q *Quick) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			patternUri = q.routes[i].Path
 		}
 
-		paramsMap, isValid := createParamsAndValid(requestURI, patternUri)
+		paramsMap, isValid := createParamsAndValid(requestURI, path.Clean(patternUri))
 
 		if !isValid {
 			continue // This route doesn't match, continue checking.
